@@ -2,9 +2,7 @@ name: Tests & QA Reporting
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    branches: ['**']
 
 jobs:
   test:
