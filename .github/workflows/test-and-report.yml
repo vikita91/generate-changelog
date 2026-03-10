@@ -32,6 +32,10 @@ jobs:
         run: npx mocha test --recursive --timeout 30000 --reporter mocha-ctrf-json-reporter
         if: always()
 
+      - name: Run tests with JUnit reporter
+        run: npx mocha test --recursive --timeout 30000 --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/unit-junit.xml
+        if: always()
+
       - name: Publish Test Results (CTRF)
         uses: ctrf-io/github-test-reporter@v1
         with:
@@ -47,6 +51,16 @@ jobs:
           files: ./coverage/lcov.info
           flags: unit
           name: unit-tests
+          fail_ci_if_error: false
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() && matrix.node == 20 }}
+        uses: codecov/test-results-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: test-results/unit-junit.xml
+          flags: unit
+          name: unit-test-results
           fail_ci_if_error: false
 
       # ── Test Summary ──
