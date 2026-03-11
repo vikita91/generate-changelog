@@ -26,7 +26,7 @@ jobs:
         run: npm install --no-save nyc
 
       - name: Run tests with coverage
-        run: npx nyc --reporter=lcov --report-dir=coverage _mocha test --recursive --timeout 30000
+        run: npx nyc --reporter=lcov --reporter=html --report-dir=coverage _mocha test --recursive --timeout 30000
 
       - name: Generate metrics JSON
         run: node scripts/generate-metrics.js
@@ -89,4 +89,12 @@ jobs:
         with:
           name: test-metrics
           path: metrics.json
+          if-no-files-found: ignore
+
+      - name: Upload HTML coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-html
+          path: coverage/
           if-no-files-found: ignore
